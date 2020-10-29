@@ -36,6 +36,7 @@ class Scene2 extends Scene {
   pacman: Phaser.GameObjects.GameObject;
   ghost: Phaser.GameObjects.GameObject;
   swipe: any;
+  gamepad: Phaser.GameObjects.Image;
 
   constructor() {
     super("playGame");
@@ -46,6 +47,7 @@ class Scene2 extends Scene {
     this.load.image("ship", "img/ship.png");
     this.load.image("ship2", "img/ship2.png");
     this.load.image("ship3", "img/ship3.png");
+    this.load.image("gamepad", "img/arrow_circle.png");
   }
 
   create() {
@@ -61,8 +63,11 @@ class Scene2 extends Scene {
 
     this.add.text(20, 20, "Playing game", {font: "25px Arial", fill: "yellow"});
 
+    this.gamepad = this.add.image(config.width/2, config.height*0.80, "gamepad");
+    this.gamepad.scale = (0.5*config.width)/this.gamepad.width;
+
     // testing swipe
-    let swipe = new Swipe(this.background,{
+    let swipe = new Swipe(this.gamepad,{
       enable: true,
       threshold: 10,
       velocityThreshold: 500,
@@ -72,18 +77,18 @@ class Scene2 extends Scene {
     let subject: Rx.Subject<string> = new Rx.Subject<string>();
     subject.subscribe((v: string) => console.log("Subject receives: " + v));
     
-    swipe.on('swipe', function(swipe: any, gameObject: any, lastPointer: any) {
+    swipe.on('swipe', function(swipe: any, gameObject: Phaser.GameObjects.Image, lastPointer: any) {
       if (swipe.left) {
-        console.log("left");
+        gameObject.angle = -90;
         subject.next("left");
       } else if (swipe.right) {
-        console.log("right");
+        gameObject.angle = 90;
         subject.next("right");
       } else if (swipe.down) {
-        console.log("down");
+        gameObject.angle = 180;
         subject.next("down");
       } else if (swipe.up) {
-        console.log("up");
+        gameObject.angle = 0;
         subject.next("up");
       }
     });
@@ -93,11 +98,12 @@ class Scene2 extends Scene {
 
 var config = {
   width: 256,
-  height: 272,
+  height: 512,
   backgroundColor: 0x000000,
   scene: [Scene1, Scene2],
   scale: {
-    mode: Scale.FIT
+    mode: Scale.FIT,
+    autoCenter: Scale.CENTER_HORIZONTALLY
   }
 }
 
