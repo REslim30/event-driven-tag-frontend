@@ -4,5 +4,8 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "moduleResolution": "node"
-  }
+  },
+  "include": [
+    "decs.d.ts"
+  ]
 }
