@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Thu Oct 29 13:14:21 ACDT 2020
+#Thu Oct 29 15:08:58 ACDT 2020
 17.baseType=DIRECTORY
 4.path=www/cordova-js-src/platform.js
 25.base=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/assets/debug

@@ -12,7 +12,7 @@
 /* }); */
 
 /* import * as Phaser from "phaser"; */
-import { Scene, Game } from "phaser";
+import { Scene, Game, Scale } from "phaser";
 
 class Scene1 extends Scene {
   constructor() {
@@ -24,6 +24,7 @@ class Scene1 extends Scene {
     this.scene.start("playGame");
   }
 }
+
 
 class Scene2 extends Scene {
   background: Phaser.GameObjects.Image;
@@ -64,7 +65,10 @@ var config = {
   width: 256,
   height: 272,
   backgroundColor: 0x000000,
-  scene: [Scene1, Scene2]
+  scene: [Scene1, Scene2],
+  scale: {
+    mode: Scale.FIT
+  }
 }
 
 window.onload = function () {
