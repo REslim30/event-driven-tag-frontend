@@ -13,6 +13,7 @@ export class ClassicMap extends Scene {
   swipe: any;
   gamepad: Phaser.GameObjects.Image;
   player: any;
+  worldLayer: Phaser.Tilemaps.StaticTilemapLayer;
 
   constructor() {
     super("playGame");
@@ -34,46 +35,81 @@ export class ClassicMap extends Scene {
     const tileset = this.map.addTilesetImage("Random", "tiles");
 
     const belowLayer: Phaser.Tilemaps.StaticTilemapLayer = this.map.createStaticLayer("bottom", tileset, 0, 0);
-    const worldLayer: Phaser.Tilemaps.StaticTilemapLayer = this.map.createStaticLayer("maze", tileset, 0, 0);
+    this.worldLayer = this.map.createStaticLayer("maze", tileset, 0, 0);
 
-    worldLayer.setCollisionByProperty({ collides: true });
+    this.worldLayer.setCollisionByProperty({ collides: true });
 
+    // Create player
     this.player = this.physics.add.image(8,32, "chaser");
+    this.physics.add.collider(this.player, this.worldLayer);
+    this.player.direction = null;
     this.player.setOrigin(0,0);
-
-    this.physics.add.collider(this.player, worldLayer);
 
     // Set gamepad
     this.gamepad = this.add.image(<number>config.width/2, <number>config.height*0.80, "gamepad");
     this.gamepad.scale = (0.5*<number>config.width)/this.gamepad.width;
     let swipe: Subject<Direction> = setSwipe(this.gamepad);
     
-    let speed = 50;
     swipe.subscribe((direction: Direction) => {
       switch (direction) {
         case Direction.Up:
-          this.player.body.setVelocityY(-speed);
-          this.player.body.setVelocityX(0);
+          this.player.direction = Direction.Up;
           break
 
         case Direction.Down:
-          this.player.body.setVelocityY(speed);
-          this.player.body.setVelocityX(0);
+          this.player.direction = Direction.Down;
           break
         
         case Direction.Left:
-          this.player.body.setVelocityY(0);
-          this.player.body.setVelocityX(-speed);
+          this.player.direction = Direction.Left;
           break
         
         case Direction.Right:
-          this.player.body.setVelocityY(0);
-          this.player.body.setVelocityX(speed);
+          this.player.direction = Direction.Right;
           break
 
         default:
           throw TypeError("Unknown direction: " + direction);
       }
     });
+
+    setInterval(() => {
+      // Only change direction if there is a path and we are at the center of a tile
+      let xPos: number = Math.trunc(this.player.body.x/8);
+      let yPos: number = Math.trunc(this.player.body.y/8);
+      switch (this.player.direction) {
+        case Direction.Up:
+          if (this.worldLayer.hasTileAt(xPos, yPos-1) == false) {
+            this.player.x = (xPos)*8; 
+            this.player.y = (yPos - 1)*8; 
+          }
+          break
+
+        case Direction.Down:
+          if (this.worldLayer.hasTileAt(xPos, yPos+1) == false) {
+            this.player.x = (xPos)*8; 
+            this.player.y = (yPos + 1)*8; 
+          }
+          break
+
+        case Direction.Left:
+          if (this.worldLayer.hasTileAt(xPos-1, yPos) == false) {
+            this.player.x = (xPos - 1)*8; 
+            this.player.y = (yPos)*8; 
+          }
+          break
+
+        case Direction.Right:
+          if (this.worldLayer.hasTileAt(xPos+1, yPos) == false) {
+            this.player.x = (xPos + 1)*8; 
+            this.player.y = (yPos)*8; 
+          }
+          break
+        
+        default:
+          break
+      }
+    }, 500);
   }
+
 }
