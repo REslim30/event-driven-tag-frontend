@@ -38,13 +38,6 @@ export class ClassicMap extends Scene {
 
     worldLayer.setCollisionByProperty({ collides: true });
 
-    const debugGraphics = this.add.graphics().setAlpha(0.75);
-    worldLayer.renderDebug(debugGraphics, {
-      tileColor: null,
-      collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
-      faceColor: new Phaser.Display.Color(40, 39, 37, 255)
-    });
-
     this.player = this.physics.add.image(8,32, "chaser");
     this.player.setOrigin(0,0);
 
