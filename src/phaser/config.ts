@@ -12,5 +12,11 @@ export let config: Phaser.Types.Core.GameConfig = {
   scale: {
     mode: Scale.FIT,
     autoCenter: Scale.CENTER_HORIZONTALLY
+  },
+  physics: {
+    default: "arcade",
+    arcade: {
+      gravity: { y: 0 }
+    }
   }
 }
