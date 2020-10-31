@@ -1,4 +1,5 @@
 import { Scale } from "phaser";
+import { ClassicMap } from "./ClassicMap";
 
 // Set width here
 // Since on average phone screens are 18:9 or 19:8
@@ -8,7 +9,7 @@ let width: number = 224;
 export let config: Phaser.Types.Core.GameConfig = {
   width: width,
   height: width*2,
-  backgroundColor: 0x000000,
+  backgroundColor: 0xFFFFFF,
   scale: {
     mode: Scale.FIT,
     autoCenter: Scale.CENTER_HORIZONTALLY
@@ -18,5 +19,7 @@ export let config: Phaser.Types.Core.GameConfig = {
     arcade: {
       gravity: { y: 0 }
     }
-  }
+  },
+  parent: "app",
+  scene: ClassicMap
 }

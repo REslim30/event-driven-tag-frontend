@@ -11,18 +11,25 @@
 /*     alert(value); */
 /* }); */
 
-/* import * as Phaser from "phaser"; */
 import { Game } from "phaser";
-
 import { config } from "./phaser/config";
-import { ClassicMap } from "./phaser/ClassicMap";
-
-
-// Set scenes to Game here to avoid circular dependencies
-config.scene = [ ClassicMap ];
+import $ from "jquery";
+import { fromEvent } from "rxjs";
 
 window.onload = function () {
-  /* var game = new Game(config); */
-  document.getElementById("app").innerHTML
+
+  // How connect page is loaded
+  /* $("#app").load("html/connect.html"); */
+  // How lobby page is loaded
+  /* $("#app").load("html/lobby.html"); */
+
+  // How Connector can listen to events
+  /* fromEvent(<HTMLElement>document.getElementById("app"), "touchend") */
+  /*   .subscribe((event: TouchEvent) => { */
+      
+  /*   }); */
+
+  // How game is started
+  var game = new Game(config);
 }
 
