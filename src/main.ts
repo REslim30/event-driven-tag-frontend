@@ -17,21 +17,12 @@ import { Game } from "phaser";
 import { config } from "./phaser/config";
 import { ClassicMap } from "./phaser/ClassicMap";
 
-/* class Scene1 extends Scene { */
-/*   constructor() { */
-/*     super("bootGame"); */
-/*   } */
-
-/*   create() { */
-/*     this.add.text(20, 20, "Loading game..."); */
-/*     this.scene.start("playGame"); */
-/*   } */
-/* } */
 
 // Set scenes to Game here to avoid circular dependencies
 config.scene = [ ClassicMap ];
 
 window.onload = function () {
-  var game = new Game(config);
+  /* var game = new Game(config); */
+  document.getElementById("app").innerHTML
 }
 
