@@ -7,7 +7,8 @@
 // thus the html for different pages is defined here
 let lobbyPage: string = `
   <h1>Lobby</h1>
-  <ul id="lobby-list"></ul>
+  <ul id="lobby-list">
+  </ul>
   <button id="start-button">Start Game</button>
 `;
 export default lobbyPage;

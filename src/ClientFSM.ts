@@ -1,8 +1,8 @@
 import { Game } from "phaser";
 import { config } from "./phaser/config";
-import $ from "jquery";
 import connectPage from "./page/connectHTML";
 import lobbyPage from "./page/lobbyHTML";
+import $ from "jquery";
 
 // Class representing client FSM
 // You can find the FSM diagram in logbook
@@ -32,17 +32,15 @@ export class ClientFSM {
 
     switch (this.state) {
       case this.CONNECT:
-        console.log(connectPage);
-        $("#app").html(connectPage);
+        (document.getElementById("app") as HTMLElement).innerHTML = connectPage;
         return;
       
       case this.LOBBY:
-        console.log(lobbyPage);
-        $("#app").html(lobbyPage);
+        (document.getElementById("app") as HTMLElement).innerHTML = lobbyPage;
         return;
       
       case this.GAME:
-        $("#app").empty();
+        (document.getElementById("app") as HTMLElement).innerHTML = "";
         this.game = new Game(config);
         return;
       
@@ -56,14 +54,14 @@ export class ClientFSM {
   public serverDisconnect(): void {
     switch (this.state) {
       case this.LOBBY:
-        alert("Server Disconected.");
         this.next(this.CONNECT);
+        alert("Server Disconected.");
         break
       
       case this.GAME:
         this.game.destroy(true);
-        alert("Server Disconected.");
         this.next(this.CONNECT);
+        alert("Server Disconected.");
         break
       
       
@@ -108,8 +106,52 @@ export class ClientFSM {
         break
       
       default:
-        console.log("gameStart default");
+        console.log("serverGameStart default");
         break
+    }
+  }
+
+  // Takes a string of who won
+  public serverGameEnd(winner: string): void {
+    switch (this.state) {
+      case this.GAME:
+        this.next(this.LOBBY);
+        alert("Game is over! " + winner + " Won!");
+        break;
+      
+      default:
+        console.log("serverGameEnd default.");
+        break;
+    }
+  }
+
+  public lobbyUpdate(lobby: Array<string>): void {
+    switch (this.state) {
+      case this.LOBBY:
+        // Add lobby to the lobby list
+        lobby.forEach((element: string) => {
+          $("#lobby-list").append(
+            $("<li></li>")
+              .text(element)
+          );
+        });
+        break;
+      
+      
+      default:
+        console.log("lobbyUpdate default.");
+        break;
+    }
+  }
+
+  public connectClick(): void {
+    switch (this.state) {
+      case this.CONNECT:
+        
+        break;
+      
+      default:
+        break;
     }
   }
 }

@@ -11,7 +11,7 @@
 /*     alert(value); */
 /* }); */
 
-/* import { ClientFSM } from "./ClientFSM"; */
+import { ClientFSM } from "./ClientFSM";
 
 window.onload = function () {
   // How connect page is loaded
@@ -28,12 +28,14 @@ window.onload = function () {
   // How game is started
   /* var game = new Game(config); */
 
-  console.log("test");
-  alert("test");
-  /* let client: ClientFSM = new ClientFSM(); */
-  /* client.serverConnect(); */
-  /* setTimeout(() => { */
-  /*   client.serverGameStart(); */
-  /* }, 4000); */
+  let client: ClientFSM = new ClientFSM();
+  client.serverConnect();
+  client.serverGameStart();
+  setTimeout(() => {
+    client.serverGameEnd("Chaser");
+    setTimeout(() => {
+      client.lobbyUpdate(["Huy", "Ian"]);
+    },4000);
+  }, 4000);
 }
 
