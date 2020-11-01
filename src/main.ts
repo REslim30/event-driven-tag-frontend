@@ -11,13 +11,9 @@
 /*     alert(value); */
 /* }); */
 
-import { Game } from "phaser";
-import { config } from "./phaser/config";
-import $ from "jquery";
-import { fromEvent } from "rxjs";
+/* import { ClientFSM } from "./ClientFSM"; */
 
 window.onload = function () {
-
   // How connect page is loaded
   /* $("#app").load("html/connect.html"); */
   // How lobby page is loaded
@@ -30,6 +26,14 @@ window.onload = function () {
   /*   }); */
 
   // How game is started
-  var game = new Game(config);
+  /* var game = new Game(config); */
+
+  console.log("test");
+  alert("test");
+  /* let client: ClientFSM = new ClientFSM(); */
+  /* client.serverConnect(); */
+  /* setTimeout(() => { */
+  /*   client.serverGameStart(); */
+  /* }, 4000); */
 }
 
