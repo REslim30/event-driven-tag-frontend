@@ -29,13 +29,17 @@ window.onload = function () {
   /* var game = new Game(config); */
 
   let client: ClientFSM = new ClientFSM();
+  /* client.connectClick(); */
   client.serverConnect();
   client.serverGameStart();
   setTimeout(() => {
-    client.serverGameEnd("Chaser");
-    setTimeout(() => {
-      client.lobbyUpdate(["Huy", "Ian"]);
-    },4000);
+    /* client.startClick(); */
+    client.exitClick();
   }, 4000);
+  setTimeout(() => {
+    /* client.startClick(); */
+    client.serverConnect();
+    client.serverGameStart();
+  }, 8000);
 }
 

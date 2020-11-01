@@ -147,10 +147,37 @@ export class ClientFSM {
   public connectClick(): void {
     switch (this.state) {
       case this.CONNECT:
-        
+        alert("Attempting connection...");
         break;
       
       default:
+        console.log("connectClick default.");
+        break;
+    }
+  }
+
+  public startClick(): void {
+    switch (this.state) {
+      case this.LOBBY:
+        alert("Waiting for server to start...");
+        break;
+      
+      default:
+        console.log("startClick default.");
+        break;
+    }
+  }
+
+  public exitClick(): void {
+    switch (this.state) {
+      case this.GAME:
+        alert("Disconnected from server.");
+        this.game.destroy(true);
+        this.next(this.CONNECT);
+        break;
+      
+      default:
+        console.log("exitClick default.");
         break;
     }
   }
