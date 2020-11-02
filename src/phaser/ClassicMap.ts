@@ -14,6 +14,7 @@ export class ClassicMap extends Scene {
   gamepad: Phaser.GameObjects.Image;
   player: any;
   worldLayer: Phaser.Tilemaps.StaticTilemapLayer;
+  exitButton: Phaser.GameObjects.Image;
 
   constructor() {
     super("playGame");
@@ -27,6 +28,9 @@ export class ClassicMap extends Scene {
     this.load.tilemapTiledJSON("classic-map", "img/ClassicMap.json");
     this.load.image("tiles", 'img/tiles.png')
     this.load.image("chaser", "img/Chaser.png")
+
+    // Button
+    this.load.image("exit-button", "img/exit-button.png")
   }
 
   create() {
@@ -72,6 +76,16 @@ export class ClassicMap extends Scene {
           throw TypeError("Unknown direction: " + direction);
       }
     });
+
+    // Set button
+    this.exitButton = this.add.image(26*8, 0, "exit-button");
+    this.exitButton
+      .setOrigin(0,0)
+      .setInteractive()
+      .on("pointerup", () => {
+        let event = new CustomEvent("exitClick");
+        document.dispatchEvent(event);
+      })
 
     /* setInterval(() => { */
     /*   // Only change direction if there is a path and we are at the center of a tile */

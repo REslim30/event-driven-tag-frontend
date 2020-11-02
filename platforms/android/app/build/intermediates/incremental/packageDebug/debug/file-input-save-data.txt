@@ -1,5 +1,5 @@
 #Internal package file, do not edit.
-#Sun Nov 01 18:34:01 ACDT 2020
+#Mon Nov 02 17:56:15 ACDT 2020
 17.baseType=DIRECTORY
 4.path=www/img/arrow_circle.png
 8.set=ASSET
@@ -80,7 +80,7 @@ count=21
 17.set=ASSET
 13.baseType=DIRECTORY
 13.base=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/assets/debug
-19.path=www/img/Random.tsx
+19.path=www/img/exit-button.png
 15.baseType=DIRECTORY
 3.set=ASSET
 5.base=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/assets/debug

@@ -8,6 +8,7 @@
 let lobbyPage: string = `
   <h1>Lobby</h1>
   <ul id="lobby-list">
+    <li>Loading Lobby</li>
   </ul>
   <button id="start-button">Start Game</button>
 `;

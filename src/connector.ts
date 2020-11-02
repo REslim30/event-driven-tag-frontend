@@ -121,4 +121,11 @@ window.onload = function () {
       socket?.emit("startClick");
       clientFSM.startClick();
     })
+
+  // Handle exitClicks
+  fromEvent(document, "exitClick")
+    .subscribe(() => {
+      clientFSM.exitClick();
+      socket?.disconnect();
+    });
 };
