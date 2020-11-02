@@ -5,7 +5,7 @@ import io from "socket.io-client";
 import { ClientFSM } from "./ClientFSM";
 
 window.onload = function () {
-  let socket = null;
+  let socket: SocketIOClient.Socket;
   // Initialize ClientFSM
   let clientFSM: ClientFSM = new ClientFSM();
 
@@ -39,7 +39,7 @@ window.onload = function () {
     filter((connectionQuery: {name: string; url: string; event: TouchEvent}) => {
       return !isValidQuery(connectionQuery);
     })
-  ).subscribe((connectionQuery) => {
+  ).subscribe(() => {
     alert("Please enter a valid url (e.g. <protocol>://<ip or domain>:<port>) and name. Note: sockets.io only supports http and ws protocols.");
   });
   
@@ -50,8 +50,12 @@ window.onload = function () {
       return isValidQuery(connectionQuery);
     })
   ).subscribe((connectionQuery) => {
+    // Close previous socket if any
+    socket?.close();
+
     alert("Attempting connection to " + connectionQuery.url + " with username " + connectionQuery.name);
     socket = io(connectionQuery.url, {
+      reconnection: false,
       query: {
         name: connectionQuery.name
       }
