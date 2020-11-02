@@ -73,43 +73,43 @@ export class ClassicMap extends Scene {
       }
     });
 
-    setInterval(() => {
-      // Only change direction if there is a path and we are at the center of a tile
-      let xPos: number = Math.trunc(this.player.body.x/8);
-      let yPos: number = Math.trunc(this.player.body.y/8);
-      switch (this.player.direction) {
-        case Direction.Up:
-          if (this.worldLayer.hasTileAt(xPos, yPos-1) == false) {
-            this.player.x = (xPos)*8; 
-            this.player.y = (yPos - 1)*8; 
-          }
-          break
+    /* setInterval(() => { */
+    /*   // Only change direction if there is a path and we are at the center of a tile */
+    /*   let xPos: number = Math.trunc(this.player.body.x/8); */
+    /*   let yPos: number = Math.trunc(this.player.body.y/8); */
+    /*   switch (this.player.direction) { */
+    /*     case Direction.Up: */
+    /*       if (this.worldLayer.hasTileAt(xPos, yPos-1) == false) { */
+    /*         this.player.x = (xPos)*8; */ 
+    /*         this.player.y = (yPos - 1)*8; */ 
+    /*       } */
+    /*       break */
 
-        case Direction.Down:
-          if (this.worldLayer.hasTileAt(xPos, yPos+1) == false) {
-            this.player.x = (xPos)*8; 
-            this.player.y = (yPos + 1)*8; 
-          }
-          break
+    /*     case Direction.Down: */
+    /*       if (this.worldLayer.hasTileAt(xPos, yPos+1) == false) { */
+    /*         this.player.x = (xPos)*8; */ 
+    /*         this.player.y = (yPos + 1)*8; */ 
+    /*       } */
+    /*       break */
 
-        case Direction.Left:
-          if (this.worldLayer.hasTileAt(xPos-1, yPos) == false) {
-            this.player.x = (xPos - 1)*8; 
-            this.player.y = (yPos)*8; 
-          }
-          break
+    /*     case Direction.Left: */
+    /*       if (this.worldLayer.hasTileAt(xPos-1, yPos) == false) { */
+    /*         this.player.x = (xPos - 1)*8; */ 
+    /*         this.player.y = (yPos)*8; */ 
+    /*       } */
+    /*       break */
 
-        case Direction.Right:
-          if (this.worldLayer.hasTileAt(xPos+1, yPos) == false) {
-            this.player.x = (xPos + 1)*8; 
-            this.player.y = (yPos)*8; 
-          }
-          break
+    /*     case Direction.Right: */
+    /*       if (this.worldLayer.hasTileAt(xPos+1, yPos) == false) { */
+    /*         this.player.x = (xPos + 1)*8; */ 
+    /*         this.player.y = (yPos)*8; */ 
+    /*       } */
+    /*       break */
         
-        default:
-          break
-      }
-    }, 500);
+    /*     default: */
+    /*       break */
+    /*   } */
+    /* }, 500); */
   }
 
 }

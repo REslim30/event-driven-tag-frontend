@@ -76,8 +76,9 @@ export class ClientFSM {
 
   public serverReject(): void {
     switch (this.state) {
-      case this.CONNECT:
+      case this.LOBBY:
         alert("Server full");
+        this.next(this.CONNECT);
         return;
       
 
@@ -129,11 +130,10 @@ export class ClientFSM {
     switch (this.state) {
       case this.LOBBY:
         // Add lobby to the lobby list
+        $("#lobby-list").empty();
         lobby.forEach((element: string) => {
-          $("#lobby-list").append(
-            $("<li></li>")
-              .text(element)
-          );
+          $("#lobby-list")
+            .append($("<li></li>").text(element));
         });
         break;
       

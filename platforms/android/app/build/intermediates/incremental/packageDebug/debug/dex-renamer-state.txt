@@ -1,4 +1,4 @@
-#Mon Nov 02 16:18:06 ACDT 2020
+#Mon Nov 02 17:16:55 ACDT 2020
 base.0=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/transforms/dexMerger/debug/0
 path.0=classes.dex
 renamed.0=classes.dex

@@ -61,9 +61,64 @@ window.onload = function () {
       }
     });
 
-    socket.on("connection", () => {
-      console.log("connection occured");
+    // Establish connection
+    socket.on("connect", () => {
+      console.log("connection sucessfully to server");
       clientFSM.serverConnect();
     });
+
+    // Get lobby updates
+    socket.on("lobby", (lobby: Array<any>) => {
+      clientFSM.lobbyUpdate(lobby as Array<string>);
+    });
+
+    //create a disconnect stream
+    let disconnectStream = fromEvent(socket, "disconnect");
+
+    // Function to compute whether or not server rejected connection
+    function isServerReject(reason: string): boolean {
+      return reason === "io server disconnect";
+    }
+    // server rejects
+    disconnectStream.pipe(
+      filter((reason: string) => {
+        return isServerReject(reason);
+      })
+    ).subscribe(() => {
+      console.log("Server Reject");
+      clientFSM.serverReject();
+    });
+    // legimitate disconnects
+    disconnectStream.pipe(
+      filter((reason: string) => {
+        return !isServerReject(reason);
+      })
+    ).subscribe(() => {
+      clientFSM.serverDisconnect();
+    });
+
+    // Server game start
+    socket.on("gameStart", () => {
+      clientFSM.serverGameStart();
+    });
+
+    // Server game end
+    socket.on("gameEnd", (winner: string) => {
+      clientFSM.serverGameEnd(winner);
+    });
   });
+
+
+  // Send start clicks to server
+  let startClickStream = fromEvent(<HTMLElement>document.getElementById("app"), "touchend").pipe(
+    filter((event: TouchEvent) => {
+      return (<HTMLInputElement>event.target).id === "start-button";
+    })
+  );
+
+  startClickStream
+    .subscribe(() => {
+      socket?.emit("startClick");
+      clientFSM.startClick();
+    })
 };
