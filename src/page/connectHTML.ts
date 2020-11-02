@@ -10,8 +10,8 @@ let connectPage: string = `
   <h3>Your Name:</h3>
   <input type="text" id="name-input">
   <h3>Connect To Server:</h3>
-  <input type="text" id="url-input" placeholder="e.g. localhost:3000">
+  <input type="text" id="url-input" placeholder="e.g. http://10.0.2.2:3000">
   <br>
-  <button id="submit-button">Connect</button>
+  <button id="connection-button">Connect</button>
 `;
 export default connectPage;

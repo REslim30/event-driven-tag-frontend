@@ -2,7 +2,7 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    bundle: './src/main.ts'
+    bundle: './src/connector.ts'
   },
   module: {
     rules: [
