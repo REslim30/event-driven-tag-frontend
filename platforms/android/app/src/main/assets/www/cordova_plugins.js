@@ -20,7 +20,8 @@ module.exports.metadata =
 {
   "cordova-plugin-whitelist": "1.3.4",
   "es6-promise-plugin": "4.2.2",
-  "cordova-plugin-screen-orientation": "3.0.2"
+  "cordova-plugin-screen-orientation": "3.0.2",
+  "cordova-plugin-console": "1.1.0"
 };
 // BOTTOM OF METADATA
 });

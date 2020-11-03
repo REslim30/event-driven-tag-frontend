@@ -12,6 +12,9 @@
     },
     "cordova-plugin-screen-orientation": {
       "PACKAGE_NAME": "io.cordova.tag"
+    },
+    "cordova-plugin-console": {
+      "PACKAGE_NAME": "io.cordova.tag"
     }
   },
   "dependent_plugins": {

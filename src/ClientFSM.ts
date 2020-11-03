@@ -1,8 +1,8 @@
-import { Game } from "phaser";
-import { config } from "./phaser/config";
 import connectPage from "./page/connectHTML";
 import lobbyPage from "./page/lobbyHTML";
 import $ from "jquery";
+import { game } from "./game"
+
 
 // Class representing client FSM
 // You can find the FSM diagram in logbook
@@ -14,7 +14,8 @@ export class ClientFSM {
   private state: number = -1;
 
   // Private fields
-  private game: Phaser.Game;
+  // gets updated every connection
+  private socket: SocketIOClient.Socket;
 
   constructor() {
     this.initialize();
@@ -41,7 +42,7 @@ export class ClientFSM {
       
       case this.GAME:
         (document.getElementById("app") as HTMLElement).innerHTML = "";
-        this.game = new Game(config);
+        game.start(this.socket);
         return;
       
       default:
@@ -59,7 +60,7 @@ export class ClientFSM {
         break
       
       case this.GAME:
-        this.game.destroy(true);
+        game.end();
         this.next(this.CONNECT);
         alert("Server Disconected.");
         break
@@ -88,9 +89,10 @@ export class ClientFSM {
     }
   }
 
-  public serverConnect(): void {
+  public serverConnect(inSocket: SocketIOClient.Socket): void {
     switch (this.state) {
       case this.CONNECT:
+        this.socket = inSocket;
         this.next(this.LOBBY);
         return;
       
@@ -172,7 +174,7 @@ export class ClientFSM {
     switch (this.state) {
       case this.GAME:
         alert("Disconnected from server.");
-        this.game.destroy(true);
+        game.end();
         this.next(this.CONNECT);
         break;
       

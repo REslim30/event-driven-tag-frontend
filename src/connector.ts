@@ -4,8 +4,8 @@ import { filter, map } from "rxjs/operators";
 import io from "socket.io-client";
 import { ClientFSM } from "./ClientFSM";
 
+var socket: SocketIOClient.Socket;
 window.onload = function () {
-  let socket: SocketIOClient.Socket;
   // Initialize ClientFSM
   let clientFSM: ClientFSM = new ClientFSM();
 
@@ -64,7 +64,7 @@ window.onload = function () {
     // Establish connection
     socket.on("connect", () => {
       console.log("connection sucessfully to server");
-      clientFSM.serverConnect();
+      clientFSM.serverConnect(socket);
     });
 
     // Get lobby updates
