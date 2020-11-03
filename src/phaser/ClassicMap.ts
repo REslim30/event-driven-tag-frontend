@@ -34,14 +34,15 @@ export class ClassicMap extends Scene {
   }
 
   create() {
-    // The map
+    // Map data
     this.map = this.make.tilemap({ key: "classic-map" });
     const tileset = this.map.addTilesetImage("Random", "tiles");
 
     const belowLayer: Phaser.Tilemaps.StaticTilemapLayer = this.map.createStaticLayer("bottom", tileset, 0, 0);
     this.worldLayer = this.map.createStaticLayer("maze", tileset, 0, 0);
-
-    this.worldLayer.setCollisionByProperty({ collides: true });
+    
+    const coinLayer: Phaser.Tilemaps.StaticTilemapLayer = this.map.createStaticLayer("coins", tileset, 0, 0);
+    const powerUpLayer: Phaser.Tilemaps.StaticTilemapLayer = this.map.createStaticLayer("powerups", tileset, 0, 0);
 
     // Create player
     this.player = this.physics.add.image(8,32, "chaser");
@@ -86,44 +87,6 @@ export class ClassicMap extends Scene {
         let event = new CustomEvent("exitClick");
         document.dispatchEvent(event);
       })
-
-    /* setInterval(() => { */
-    /*   // Only change direction if there is a path and we are at the center of a tile */
-    /*   let xPos: number = Math.trunc(this.player.body.x/8); */
-    /*   let yPos: number = Math.trunc(this.player.body.y/8); */
-    /*   switch (this.player.direction) { */
-    /*     case Direction.Up: */
-    /*       if (this.worldLayer.hasTileAt(xPos, yPos-1) == false) { */
-    /*         this.player.x = (xPos)*8; */ 
-    /*         this.player.y = (yPos - 1)*8; */ 
-    /*       } */
-    /*       break */
-
-    /*     case Direction.Down: */
-    /*       if (this.worldLayer.hasTileAt(xPos, yPos+1) == false) { */
-    /*         this.player.x = (xPos)*8; */ 
-    /*         this.player.y = (yPos + 1)*8; */ 
-    /*       } */
-    /*       break */
-
-    /*     case Direction.Left: */
-    /*       if (this.worldLayer.hasTileAt(xPos-1, yPos) == false) { */
-    /*         this.player.x = (xPos - 1)*8; */ 
-    /*         this.player.y = (yPos)*8; */ 
-    /*       } */
-    /*       break */
-
-    /*     case Direction.Right: */
-    /*       if (this.worldLayer.hasTileAt(xPos+1, yPos) == false) { */
-    /*         this.player.x = (xPos + 1)*8; */ 
-    /*         this.player.y = (yPos)*8; */ 
-    /*       } */
-    /*       break */
-        
-    /*     default: */
-    /*       break */
-    /*   } */
-    /* }, 500); */
   }
 
 }
