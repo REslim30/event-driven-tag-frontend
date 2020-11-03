@@ -4,6 +4,8 @@ import { setSwipe, Direction } from "./swipe";
 import { Subject } from "rxjs";
 
 export class ClassicMap extends Scene {
+  readonly tileHeight: number = 8;
+  readonly tileWidth: number = 8;
   map: Phaser.Tilemaps.Tilemap;
   ship1: Phaser.GameObjects.Image;
   ship2: Phaser.GameObjects.Image;
@@ -12,7 +14,7 @@ export class ClassicMap extends Scene {
   ghost: Phaser.GameObjects.GameObject;
   swipe: any;
   gamepad: Phaser.GameObjects.Image;
-  player: any;
+  chaser: any;
   worldLayer: Phaser.Tilemaps.StaticTilemapLayer;
   exitButton: Phaser.GameObjects.Image;
 
@@ -45,10 +47,8 @@ export class ClassicMap extends Scene {
     const powerUpLayer: Phaser.Tilemaps.StaticTilemapLayer = this.map.createStaticLayer("powerups", tileset, 0, 0);
 
     // Create player
-    this.player = this.physics.add.image(8,32, "chaser");
-    this.physics.add.collider(this.player, this.worldLayer);
-    this.player.direction = null;
-    this.player.setOrigin(0,0);
+    this.chaser = this.physics.add.image(13*this.tileWidth + (this.tileWidth/2),23*this.tileHeight + (this.tileHeight/2), "chaser");
+    this.chaser.direction = null;
 
     // Set gamepad
     this.gamepad = this.add.image(<number>config.width/2, <number>config.height*0.80, "gamepad");
@@ -58,19 +58,19 @@ export class ClassicMap extends Scene {
     swipe.subscribe((direction: Direction) => {
       switch (direction) {
         case Direction.Up:
-          this.player.direction = Direction.Up;
+          this.chaser.direction = Direction.Up;
           break
 
         case Direction.Down:
-          this.player.direction = Direction.Down;
+          this.chaser.direction = Direction.Down;
           break
         
         case Direction.Left:
-          this.player.direction = Direction.Left;
+          this.chaser.direction = Direction.Left;
           break
         
         case Direction.Right:
-          this.player.direction = Direction.Right;
+          this.chaser.direction = Direction.Right;
           break
 
         default:
