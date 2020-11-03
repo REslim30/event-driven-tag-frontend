@@ -21,15 +21,13 @@ export class ClassicMap extends Scene {
   chaser1: any;
   chaser2: any;
   chaser3: any;
+  player: any;
 
   socket: SocketIOClient.Socket;
 
   constructor(config, inSocket: SocketIOClient.Socket) {
     super(config);
     this.socket = inSocket;
-
-    this.socket.on("role", (role: string) => {
-    });
   }
 
   preload() {
@@ -59,7 +57,6 @@ export class ClassicMap extends Scene {
 
     // Create chaser
     this.chasee = this.add.image(13*this.tileWidth + (this.tileWidth/2),23*this.tileHeight + (this.tileHeight/2), "chasee");
-    this.chasee.direction = null;
 
     // Create chasees
     this.chaser0 = this.add.image(11*this.tileWidth + (this.tileWidth/2), 12*this.tileHeight + (this.tileHeight/2), "chaser");
@@ -72,28 +69,28 @@ export class ClassicMap extends Scene {
     this.gamepad.scale = (0.5*<number>config.width)/this.gamepad.width;
     let swipe: Subject<Direction> = setSwipe(this.gamepad);
     
-    /* swipe.subscribe((direction: Direction) => { */
-    /*   switch (direction) { */
-    /*     case Direction.Up: */
-    /*       this.chaser.direction = Direction.Up; */
-    /*       break */
+    swipe.subscribe((direction: Direction) => {
+      switch (direction) {
+        case Direction.Up:
+          this.socket.emit("directionChange", "up");
+          break
 
-    /*     case Direction.Down: */
-    /*       this.chaser.direction = Direction.Down; */
-    /*       break */
+        case Direction.Down:
+          this.socket.emit("directionChange", "up");
+          break
         
-    /*     case Direction.Left: */
-    /*       this.chaser.direction = Direction.Left; */
-    /*       break */
+        case Direction.Left:
+          this.socket.emit("directionChange", "up");
+          break
         
-    /*     case Direction.Right: */
-    /*       this.chaser.direction = Direction.Right; */
-    /*       break */
+        case Direction.Right:
+          this.socket.emit("directionChange", "up");
+          break
 
-    /*     default: */
-    /*       throw TypeError("Unknown direction: " + direction); */
-    /*   } */
-    /* }); */
+        default:
+          throw TypeError("Unknown direction: " + direction);
+      }
+    });
 
     // Set button
     this.exitButton = this.add.image(26*8, 0, "exit-button");
@@ -105,27 +102,19 @@ export class ClassicMap extends Scene {
         document.dispatchEvent(event);
       });
 
-  }
+    // Define the sockets
+    // When receiving ready, set character to blue
+    this.socket.on("role", (role: string) => {
+      this.player = (<any>this)[role];
 
-  private returnPlayer(role: string) {
-    switch (role) {
-      case "chasee":
-        return this.chasee;
-      
-      case "chaser0":
-        return this.chaser0;
-      
-      case "chaser1":
-        return this.chaser1;
-      
-      case "chaser2":
-        return this.chaser2;
-      
-      case "chaser3":
-        return this.chaser3;
-      
-      default:
-        throw Error("Unkown role: " + role);
-    }
+      if (role === "chasee") {
+        alert("You are the chasee. Collect all the coins before time runs out!");
+      } else {
+        alert("You are a chaser. Catch the chasee before they collect all coins!");
+      }
+    });
+
+    // Emit a ready message
+    this.socket.emit("ready");
   }
 }
