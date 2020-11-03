@@ -22,8 +22,14 @@ export class ClassicMap extends Scene {
   chaser2: any;
   chaser3: any;
 
-  constructor() {
-    super("playGame");
+  socket: SocketIOClient.Socket;
+
+  constructor(config, inSocket: SocketIOClient.Socket) {
+    super(config);
+    this.socket = inSocket;
+
+    this.socket.on("role", (role: string) => {
+    });
   }
 
   preload() {
@@ -97,12 +103,29 @@ export class ClassicMap extends Scene {
       .on("pointerup", () => {
         let event = new CustomEvent("exitClick");
         document.dispatchEvent(event);
-      })
+      });
 
-    // Listen to role events
-    this.game.events.on("role", (role: string) => {
-      console.log("received role: " + role);
-    })
   }
 
+  private returnPlayer(role: string) {
+    switch (role) {
+      case "chasee":
+        return this.chasee;
+      
+      case "chaser0":
+        return this.chaser0;
+      
+      case "chaser1":
+        return this.chaser1;
+      
+      case "chaser2":
+        return this.chaser2;
+      
+      case "chaser3":
+        return this.chaser3;
+      
+      default:
+        throw Error("Unkown role: " + role);
+    }
+  }
 }

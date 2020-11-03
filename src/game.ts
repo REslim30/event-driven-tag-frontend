@@ -10,11 +10,7 @@ export var game = {
   start(inSocket: SocketIOClient.Socket) {
     socket = inSocket;
     phaserGame = new Game(config);
-    console.log(phaserGame.scene);
-
-    socket.on("role", (role: string) => {
-      
-    });
+    phaserGame.scene.add('playGame', new ClassicMap({}, socket), true, { socket: socket, });
   },
   end() {
     phaserGame.destroy(true);

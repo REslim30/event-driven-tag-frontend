@@ -21,5 +21,5 @@ export let config: Phaser.Types.Core.GameConfig = {
     }
   },
   parent: "app",
-  scene: ClassicMap
+  /* scene: ClassicMap */
 }
