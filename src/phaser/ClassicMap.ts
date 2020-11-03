@@ -45,62 +45,10 @@ export class ClassicMap extends Scene {
   }
 
   create() {
-    // Map data
-    this.map = this.make.tilemap({ key: "classic-map" });
-    const tileset = this.map.addTilesetImage("Random", "tiles");
-
-    this.map.createStaticLayer("bottom", tileset, 0, 0);
-    this.worldLayer = this.map.createStaticLayer("maze", tileset, 0, 0);
-    
-    this.coinLayer = this.map.createStaticLayer("coins", tileset, 0, 0);
-    this.powerUpLayer = this.map.createStaticLayer("powerups", tileset, 0, 0);
-
-    // Create chaser
-    this.chasee = this.add.image(13*this.tileWidth + (this.tileWidth/2),23*this.tileHeight + (this.tileHeight/2), "chasee");
-
-    // Create chasees
-    this.chaser0 = this.add.image(11*this.tileWidth + (this.tileWidth/2), 12*this.tileHeight + (this.tileHeight/2), "chaser");
-    this.chaser1 = this.add.image(13*this.tileWidth + (this.tileWidth/2), 13*this.tileHeight + (this.tileHeight/2), "chaser");
-    this.chaser2 = this.add.image(14*this.tileWidth + (this.tileWidth/2), 13*this.tileHeight + (this.tileHeight/2), "chaser");
-    this.chaser3 = this.add.image(16*this.tileWidth + (this.tileWidth/2), 12*this.tileHeight + (this.tileHeight/2), "chaser");
-
-    // Set gamepad
-    this.gamepad = this.add.image(<number>config.width/2, <number>config.height*0.80, "gamepad");
-    this.gamepad.scale = (0.5*<number>config.width)/this.gamepad.width;
-    let swipe: Subject<Direction> = setSwipe(this.gamepad);
-    
-    swipe.subscribe((direction: Direction) => {
-      switch (direction) {
-        case Direction.Up:
-          this.socket.emit("directionChange", "up");
-          break
-
-        case Direction.Down:
-          this.socket.emit("directionChange", "up");
-          break
-        
-        case Direction.Left:
-          this.socket.emit("directionChange", "up");
-          break
-        
-        case Direction.Right:
-          this.socket.emit("directionChange", "up");
-          break
-
-        default:
-          throw TypeError("Unknown direction: " + direction);
-      }
-    });
-
-    // Set button
-    this.exitButton = this.add.image(26*8, 0, "exit-button");
-    this.exitButton
-      .setOrigin(0,0)
-      .setInteractive()
-      .on("pointerup", () => {
-        let event = new CustomEvent("exitClick");
-        document.dispatchEvent(event);
-      });
+    this.setMaps();
+    this.setGamepad();
+    this.setCharacters();
+    this.setExitButton();
 
     // Define the sockets
     // When receiving ready, set character to blue
@@ -116,5 +64,71 @@ export class ClassicMap extends Scene {
 
     // Emit a ready message
     this.socket.emit("ready");
+  }
+
+  private setMaps() {
+    this.map = this.make.tilemap({ key: "classic-map" });
+    const tileset = this.map.addTilesetImage("Random", "tiles");
+
+    this.map.createStaticLayer("bottom", tileset, 0, 0);
+    this.worldLayer = this.map.createStaticLayer("maze", tileset, 0, 0);
+    
+    this.coinLayer = this.map.createStaticLayer("coins", tileset, 0, 0);
+    this.powerUpLayer = this.map.createStaticLayer("powerups", tileset, 0, 0);
+  }
+
+  private setCharacters() {
+    // Create chaser
+    this.chasee = this.add.image(13*this.tileWidth + (this.tileWidth/2),23*this.tileHeight + (this.tileHeight/2), "chasee");
+
+    // Create chasees
+    this.chaser0 = this.add.image(11*this.tileWidth + (this.tileWidth/2), 12*this.tileHeight + (this.tileHeight/2), "chaser");
+    this.chaser1 = this.add.image(13*this.tileWidth + (this.tileWidth/2), 13*this.tileHeight + (this.tileHeight/2), "chaser");
+    this.chaser2 = this.add.image(14*this.tileWidth + (this.tileWidth/2), 13*this.tileHeight + (this.tileHeight/2), "chaser");
+    this.chaser3 = this.add.image(16*this.tileWidth + (this.tileWidth/2), 12*this.tileHeight + (this.tileHeight/2), "chaser");
+  }
+
+  private setExitButton() {
+    // Set button
+    this.exitButton = this.add.image(26*8, 0, "exit-button");
+    this.exitButton
+      .setOrigin(0,0)
+      .setInteractive()
+      .on("pointerup", () => {
+        let event = new CustomEvent("exitClick");
+        document.dispatchEvent(event);
+      });
+    
+  }
+
+  // Set the gampad
+  private setGamepad() {
+    // Set gamepad
+    this.gamepad = this.add.image(<number>config.width/2, <number>config.height*0.80, "gamepad");
+    this.gamepad.scale = (0.5*<number>config.width)/this.gamepad.width;
+    let swipe: Subject<Direction> = setSwipe(this.gamepad);
+    
+    swipe.subscribe((direction: Direction) => {
+      switch (direction) {
+        case Direction.Up:
+          this.socket.emit("directionChange", "up");
+          break
+
+        case Direction.Down:
+          this.socket.emit("directionChange", "down");
+          break
+        
+        case Direction.Left:
+          this.socket.emit("directionChange", "left");
+          break
+        
+        case Direction.Right:
+          this.socket.emit("directionChange", "right");
+          break
+
+        default:
+          throw TypeError("Unknown direction: " + direction);
+      }
+    });
   }
 }
