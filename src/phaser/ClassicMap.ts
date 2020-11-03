@@ -1,7 +1,8 @@
 import { Scene } from "phaser";
 import { config } from "./config";
 import { setSwipe, Direction } from "./swipe";
-import { Subject } from "rxjs";
+import { Subject, fromEvent, from } from "rxjs";
+import { bufferTime, map, filter, concatMap, throttleTime } from 'rxjs/operators';
 
 export class ClassicMap extends Scene {
   readonly tileHeight: number = 8;
@@ -13,6 +14,7 @@ export class ClassicMap extends Scene {
   worldLayer: Phaser.Tilemaps.StaticTilemapLayer;
   coinLayer: Phaser.Tilemaps.StaticTilemapLayer;
   powerUpLayer: Phaser.Tilemaps.StaticTilemapLayer;
+  timer: Phaser.GameObjects.Text;
 
   swipe: any;
 
@@ -24,6 +26,7 @@ export class ClassicMap extends Scene {
   player: any;
 
   socket: SocketIOClient.Socket;
+
 
   constructor(config, inSocket: SocketIOClient.Socket) {
     super(config);
@@ -49,24 +52,14 @@ export class ClassicMap extends Scene {
     this.setGamepad();
     this.setCharacters();
     this.setExitButton();
+    this.receiveRole();
+    this.receivePositionData();
+    this.receiveTimerData();
 
-    // Define the sockets
-    // When receiving ready, set character to blue
-    this.socket.on("role", (role: string) => {
-      this.player = (<any>this)[role];
-
-      if (role === "chasee") {
-        alert("You are the chasee. Collect all the coins before time runs out!");
-      } else {
-        alert("You are a chaser. Catch the chasee before they collect all coins!");
-      }
-    });
-
-    // Emit a ready message
     this.socket.emit("ready");
   }
 
-  private setMaps() {
+  private setMaps(): void {
     this.map = this.make.tilemap({ key: "classic-map" });
     const tileset = this.map.addTilesetImage("Random", "tiles");
 
@@ -75,9 +68,13 @@ export class ClassicMap extends Scene {
     
     this.coinLayer = this.map.createStaticLayer("coins", tileset, 0, 0);
     this.powerUpLayer = this.map.createStaticLayer("powerups", tileset, 0, 0);
+
+    // set the text
+    this.timer = this.add.text(10, 10,"2:00");
+    this.timer.setOrigin(0,0);
   }
 
-  private setCharacters() {
+  private setCharacters(): void {
     // Create chaser
     this.chasee = this.add.image(13*this.tileWidth + (this.tileWidth/2),23*this.tileHeight + (this.tileHeight/2), "chasee");
 
@@ -88,7 +85,7 @@ export class ClassicMap extends Scene {
     this.chaser3 = this.add.image(16*this.tileWidth + (this.tileWidth/2), 12*this.tileHeight + (this.tileHeight/2), "chaser");
   }
 
-  private setExitButton() {
+  private setExitButton(): void {
     // Set button
     this.exitButton = this.add.image(26*8, 0, "exit-button");
     this.exitButton
@@ -102,7 +99,7 @@ export class ClassicMap extends Scene {
   }
 
   // Set the gampad
-  private setGamepad() {
+  private setGamepad(): void {
     // Set gamepad
     this.gamepad = this.add.image(<number>config.width/2, <number>config.height*0.80, "gamepad");
     this.gamepad.scale = (0.5*<number>config.width)/this.gamepad.width;
@@ -130,5 +127,48 @@ export class ClassicMap extends Scene {
           throw TypeError("Unknown direction: " + direction);
       }
     });
+  }
+
+  private receiveRole(): void {
+    this.socket.on("role", (role: string) => {
+      this.player = (<any>this)[role];
+
+      if (role === "chasee") {
+        alert("You are the chasee. Collect all the coins before time runs out!");
+      } else {
+        alert("You are a chaser. Catch the chasee before they collect all coins!");
+      }
+    });
+  }
+
+  // Receive position data
+  // In case there's backpressure
+  // Buffer up the last 100ms and update the lastest one
+  private receivePositionData(): void {
+    fromEvent(this.socket, "positionUpdate").pipe(
+      bufferTime(100),
+      filter((arr: Array<any>) => arr.length != 0),
+      map((arr: Array<any>) => arr[arr.length-1]),
+      concatMap((obj) => from(Object.entries(obj))),
+      map(([key, value]) => { 
+        return { character: key, pos: value } ;
+      })
+    ).subscribe((obj) => {
+      const {character, pos} = obj; 
+      (<any>this)[character].setX((<any>pos).x);
+      (<any>this)[character].setY((<any>pos).y);
+    });
+  }
+
+  // Receive timer data
+  // Just in case of backpressure
+  // throttle time a little bit
+  // Receives a time-string
+  private receiveTimerData(): void {
+    fromEvent(this.socket, "timerUpdate").pipe(
+      throttleTime(900)
+    ).subscribe((time: string) => {
+      this.timer.setText(time);
+    })
   }
 }
