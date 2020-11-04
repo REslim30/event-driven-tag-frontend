@@ -63,6 +63,7 @@ export class ClassicMap extends Scene {
     this.receiveDeath();
     this.receiveReversalPowerup();
     this.receiveInvisiblePowerup();
+    this.prepareCleanup();
 
     this.socket.emit("ready");
   }
@@ -239,5 +240,28 @@ export class ClassicMap extends Scene {
       this.chasee.clearAlpha();
       this.invisibleText.setText("");
     });
+  }
+
+  private prepareCleanup(): void {
+    this.events.on('destroy', () => {
+      console.log("Unlistening to all server game events.");
+      [
+        "role",
+        "positionUpdate",
+        "timerUpdate",
+        "coinRemoval",
+        "death",
+        "startReversal",
+        "endReversal",
+        "startInvisible",
+        "endInvisible",
+      ].map((eventName: string) => {
+        return { eventName: eventName, listeners: this.socket.listeners(eventName) } ;
+      }).forEach(({eventName, listeners}) => {
+        listeners.forEach((listener: Function) => {
+          this.socket.removeListener(eventName, listener);
+        })
+      })
+    })
   }
 }
