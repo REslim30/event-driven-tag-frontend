@@ -99,6 +99,7 @@ window.onload = function () {
 
     // Server game start
     socket.on("gameStart", () => {
+      console.log("gameStart received");
       clientFSM.serverGameStart();
     });
 

@@ -38,6 +38,7 @@ export class ClientFSM {
       
       case this.LOBBY:
         (document.getElementById("app") as HTMLElement).innerHTML = lobbyPage;
+        this.socket.emit("lobbyRequest");
         return;
       
       case this.GAME:
@@ -119,6 +120,7 @@ export class ClientFSM {
     switch (this.state) {
       case this.GAME:
         alert("Game over! " + message);
+        game.end();
         this.next(this.LOBBY);
         break;
       

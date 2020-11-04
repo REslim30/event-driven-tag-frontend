@@ -255,12 +255,8 @@ export class ClassicMap extends Scene {
         "endReversal",
         "startInvisible",
         "endInvisible",
-      ].map((eventName: string) => {
-        return { eventName: eventName, listeners: this.socket.listeners(eventName) } ;
-      }).forEach(({eventName, listeners}) => {
-        listeners.forEach((listener: Function) => {
-          this.socket.removeListener(eventName, listener);
-        })
+      ].forEach((eventName: string) => {
+        (<any>this.socket).removeAllListeners(eventName);
       })
     })
   }
