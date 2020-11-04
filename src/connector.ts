@@ -103,8 +103,8 @@ window.onload = function () {
     });
 
     // Server game end
-    socket.on("gameEnd", (winner: string) => {
-      clientFSM.serverGameEnd(winner);
+    socket.on("gameEnd", (message: string) => {
+      clientFSM.serverGameEnd(message);
     });
   });
 

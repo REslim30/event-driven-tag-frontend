@@ -114,12 +114,12 @@ export class ClientFSM {
     }
   }
 
-  // Takes a string of who won
-  public serverGameEnd(winner: string): void {
+  // Takes a string of a message from server
+  public serverGameEnd(message: string): void {
     switch (this.state) {
       case this.GAME:
+        alert("Game over! " + message);
         this.next(this.LOBBY);
-        alert("Game is over! " + winner + " Won!");
         break;
       
       default:

@@ -13,8 +13,10 @@ export class ClassicMap extends Scene {
   map: Phaser.Tilemaps.Tilemap;
   worldLayer: Phaser.Tilemaps.StaticTilemapLayer;
   coinLayer: Phaser.Tilemaps.DynamicTilemapLayer;
-  powerUpLayer: Phaser.Tilemaps.StaticTilemapLayer;
+  powerUpLayer: Phaser.Tilemaps.DynamicTilemapLayer;
   timer: Phaser.GameObjects.Text;
+  reversalText: Phaser.GameObjects.Text;
+  invisibleText: Phaser.GameObjects.Text;
 
   swipe: any;
 
@@ -23,9 +25,10 @@ export class ClassicMap extends Scene {
   chaser1: any;
   chaser2: any;
   chaser3: any;
-  player: any;
+  player: string;
 
   socket: SocketIOClient.Socket;
+  swipeSubject: Subject<Direction>;
 
 
   constructor(config, inSocket: SocketIOClient.Socket) {
@@ -57,6 +60,9 @@ export class ClassicMap extends Scene {
     this.receivePositionData();
     this.receiveTimerData();
     this.receiveCoinRemoval();
+    this.receiveDeath();
+    this.receiveReversalPowerup();
+    this.receiveInvisiblePowerup();
 
     this.socket.emit("ready");
   }
@@ -69,11 +75,16 @@ export class ClassicMap extends Scene {
     this.worldLayer = this.map.createStaticLayer("maze", tileset, 0, 0);
     
     this.coinLayer = this.map.createDynamicLayer("coins", tileset, 0, 0);
-    this.powerUpLayer = this.map.createStaticLayer("powerups", tileset, 0, 0);
+    this.powerUpLayer = this.map.createDynamicLayer("powerups", tileset, 0, 0);
 
     // set the text
-    this.timer = this.add.text(10, 10,"2:00");
+    this.timer = this.add.text(8, 8,"2:00");
     this.timer.setOrigin(0,0);
+
+    this.invisibleText = this.add.text(0*8, 34*8, "");
+    this.invisibleText.setOrigin(0,0);
+    this.reversalText = this.add.text(17*8, 34*8, "");
+    this.reversalText.setOrigin(0,0);
   }
 
   private setCharacters(): void {
@@ -105,9 +116,9 @@ export class ClassicMap extends Scene {
     // Set gamepad
     this.gamepad = this.add.image(<number>config.width/2, <number>config.height*0.80, "gamepad");
     this.gamepad.scale = (0.5*<number>config.width)/this.gamepad.width;
-    let swipe: Subject<Direction> = setSwipe(this.gamepad);
+    this.swipeSubject = setSwipe(this.gamepad);
     
-    swipe.subscribe((direction: Direction) => {
+    this.swipeSubject.subscribe((direction: Direction) => {
       switch (direction) {
         case Direction.Up:
           this.socket.emit("directionChange", "up");
@@ -133,7 +144,7 @@ export class ClassicMap extends Scene {
 
   private receiveRole(): void {
     this.socket.on("role", (role: string) => {
-      this.player = (<any>this)[role];
+      this.player = role;
 
       if (role === "chasee") {
         alert("You are the chasee. Collect all the coins before time runs out!");
@@ -177,8 +188,56 @@ export class ClassicMap extends Scene {
   // Receive coin data
   private receiveCoinRemoval(): void {
     this.socket.on("coinRemoval", (obj) => {
-      console.log("received coin remove at " + obj.tileX + "," + obj.tileY);
       this.coinLayer.removeTileAt(obj.tileX, obj.tileY)
+    });
+  }
+
+  private receiveDeath(): void {
+    this.socket.on("death", (name: string) => {
+      (this as any)[name].destroy();    
+      if (this.player === name) {
+        alert("You died.");
+      }
+    });
+  }
+
+  private receiveReversalPowerup(): void {
+    this.socket.on("startReversal", (pos: { tileX: number, tileY: number }) => {
+      this.powerUpLayer.removeTileAt(pos.tileX, pos.tileY);
+      this.chasee.setTint(0x0000FF);
+      this.chaser0.setTint(0x000F00);
+      this.chaser1.setTint(0x000F00);
+      this.chaser2.setTint(0x000F00);
+      this.chaser3.setTint(0x000F00);
+
+      this.reversalText.setText("Reversal");
+    });
+
+    this.socket.on("endReversal", () => {
+      this.chasee.clearTint();
+      this.chaser0.clearTint();
+      this.chaser1.clearTint();
+      this.chaser2.clearTint();
+      this.chaser3.clearTint();
+
+      this.reversalText.setText("");
+    });
+  }
+
+  private receiveInvisiblePowerup(): void {
+    this.socket.on("startInvisible", (pos: { tileX: number, tileY: number}) => {
+      this.powerUpLayer.removeTileAt(pos.tileX, pos.tileY);
+      this.invisibleText.setText("Invisibility");
+      if (this.player !== "chasee") {
+        this.chasee.setAlpha(0);
+      } else {
+        this.chasee.setAlpha(0.25);
+      }
+    })
+
+    this.socket.on("endInvisible", () => {
+      this.chasee.clearAlpha();
+      this.invisibleText.setText("");
     });
   }
 }
