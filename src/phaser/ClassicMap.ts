@@ -12,7 +12,7 @@ export class ClassicMap extends Scene {
 
   map: Phaser.Tilemaps.Tilemap;
   worldLayer: Phaser.Tilemaps.StaticTilemapLayer;
-  coinLayer: Phaser.Tilemaps.StaticTilemapLayer;
+  coinLayer: Phaser.Tilemaps.DynamicTilemapLayer;
   powerUpLayer: Phaser.Tilemaps.StaticTilemapLayer;
   timer: Phaser.GameObjects.Text;
 
@@ -45,6 +45,7 @@ export class ClassicMap extends Scene {
 
     // Button
     this.load.image("exit-button", "img/exit-button.png");
+
   }
 
   create() {
@@ -55,6 +56,7 @@ export class ClassicMap extends Scene {
     this.receiveRole();
     this.receivePositionData();
     this.receiveTimerData();
+    this.receiveCoinRemoval();
 
     this.socket.emit("ready");
   }
@@ -66,7 +68,7 @@ export class ClassicMap extends Scene {
     this.map.createStaticLayer("bottom", tileset, 0, 0);
     this.worldLayer = this.map.createStaticLayer("maze", tileset, 0, 0);
     
-    this.coinLayer = this.map.createStaticLayer("coins", tileset, 0, 0);
+    this.coinLayer = this.map.createDynamicLayer("coins", tileset, 0, 0);
     this.powerUpLayer = this.map.createStaticLayer("powerups", tileset, 0, 0);
 
     // set the text
@@ -170,5 +172,13 @@ export class ClassicMap extends Scene {
     ).subscribe((time: string) => {
       this.timer.setText(time);
     })
+  }
+
+  // Receive coin data
+  private receiveCoinRemoval(): void {
+    this.socket.on("coinRemoval", (obj) => {
+      console.log("received coin remove at " + obj.tileX + "," + obj.tileY);
+      this.coinLayer.removeTileAt(obj.tileX, obj.tileY)
+    });
   }
 }
