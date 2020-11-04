@@ -1,7 +1,8 @@
 #Internal package file, do not edit.
-#Tue Nov 03 21:35:53 ACDT 2020
+#Wed Nov 04 17:33:35 ACDT 2020
 17.baseType=DIRECTORY
 4.path=www/img/arrow_circle.png
+22.set=ASSET
 8.set=ASSET
 19.baseType=DIRECTORY
 11.set=ASSET
@@ -9,7 +10,7 @@
 4.baseType=DIRECTORY
 14.base=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/assets/debug
 16.set=ASSET
-count=22
+count=23
 6.base=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/assets/debug
 13.path=www/js/index.js
 6.baseType=DIRECTORY
@@ -48,10 +49,11 @@ count=22
 2.base=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/assets/debug
 18.baseType=DIRECTORY
 1.path=www/img/chasee.png
+22.base=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/assets/debug
 19.set=ASSET
 0.set=ASSET
 1.baseType=DIRECTORY
-21.path=www/img/ClassicMap.json
+21.path=www/css/bulma.min.css
 3.baseType=DIRECTORY
 5.set=ASSET
 9.base=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/assets/debug
@@ -68,6 +70,8 @@ count=22
 13.set=ASSET
 2.path=www/cordova_plugins.js
 9.baseType=DIRECTORY
+22.baseType=DIRECTORY
+22.path=www/img/ClassicMap.json
 18.set=ASSET
 19.base=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/assets/debug
 12.base=/home/giahuydo99/2020/s2/edc/app-project/Tag/platforms/android/app/build/intermediates/transforms/dexMerger/debug/0

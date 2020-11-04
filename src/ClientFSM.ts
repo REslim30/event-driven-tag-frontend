@@ -137,7 +137,9 @@ export class ClientFSM {
         $("#lobby-list").empty();
         lobby.forEach((element: string) => {
           $("#lobby-list")
-            .append($("<li></li>").text(element));
+            .append($("<tr></tr>").html(
+              $("<td></td>").text(element).get(0)
+            ));
         });
         break;
       
