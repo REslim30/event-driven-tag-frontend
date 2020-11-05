@@ -81,11 +81,15 @@ export class ClassicMap extends Scene {
     // set the text
     this.timer = this.add.text(8, 8,"2:00");
     this.timer.setOrigin(0,0);
+    this.timer.setColor("black");
 
     this.invisibleText = this.add.text(0*8, 34*8, "");
     this.invisibleText.setOrigin(0,0);
+    this.invisibleText.setColor("black");
+
     this.reversalText = this.add.text(17*8, 34*8, "");
     this.reversalText.setOrigin(0,0);
+    this.reversalText.setColor("black");
   }
 
   private setCharacters(): void {
